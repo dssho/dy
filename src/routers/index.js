@@ -10,10 +10,10 @@ const routes = [
    movieRouter,
     cinemaRouter,
     mineRouter,
-  // {
-	// path:'/*',
-	// redirect:'/movie'
-  //   }
+  {
+	path:'/*',
+	redirect:'/movie'
+    }
 ]
 
 const router = new VueRouter({
