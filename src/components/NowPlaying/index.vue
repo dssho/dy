@@ -97,20 +97,36 @@
                 </div>
                 <div class="btn_mall">购票</div>
             </li> -->
-            <li v-for="item in movieList" :key="item.alt">
-                <div class="pic_show">
+          
+            <!-- <li v-for="item in movieList" :key="item.id">
+                <div class="pic_show"> -->
          <!-- "img":"http://p1.meituan.net/w.h/movie/967b253953bc7e660cfadbf9d78f67b62852693.jpg" -->
          <!-- 地址中有w.h 即宽乘高  用过滤器 在main.js中设置过滤器 -->
-                    <img :src="item.images | setWH('128.180')" alt="">
+                    <!-- <img :src="item.images | setWH('128.180')" alt=""> -->
+                    <!-- <img :src="item.images.medium" style="height:90px" alt="" />
                 </div>
                 <div class="info_list">
-                    <h2>{{item.title}} <img v-if="item.version" src="@/assets/maxs.png"/></h2>
+                    <h2>{{item.title}}</h2>
                     <p>观众评 <span class="grade">{{item.rating.average}}</span></p>
-                    <p>主演:{{item.casts.name_en}}</p>
+                    <p v-for="i in item.casts" :key="i.id">主演:{{i.name}}</p>
                     <p>{{item.genres}}</p>
                 </div>
                 <div class="btn_mall">购票</div>
-            </li>
+            </li> -->
+
+            
+                <li v-for="item in movieList" :key="item.id">
+                    <div class="pic_show"><img :src="item.img | setWH('128.180')"></div>
+                    <div class="info_list">
+                        <h2>{{ item.nm }} <img v-if="item.version" src="@/assets/maxs.png" alt=""></h2>
+                        <p>观众评 <span class="grade">{{ item.sc }}</span></p>
+                        <p>主演: {{ item.star }}</p>
+                        <p>{{ item.showInfo }}</p>
+                    </div>
+                    <div class="btn_mall">
+                        购票
+                    </div>
+                </li>
         </ul>
     </div>
 </template>
@@ -123,14 +139,22 @@ export default {
         }
     },
     mounted(){
-        this.axios.get('https://douban.uieee.com/v2/movie/in_theaters').then((res)=>{
-            var status=res.status;
+        // this.axios.get('/v2/movie/in_theaters').then((res)=>{
+        //     var status=res.status;
+        //     if(status===200){
+        //      this.movieList=res.data.subjects;
+        //     //  console.log(res.data.subjects);
+        //     //  console.log(this.movieList);
+        //     }
             
-            if(status==='200'){
-             this.movieList=res.data.subjects;
+        //     // console.log(res);
+
+         this.axios.get('/api/movieOnInfoList?cityId=10').then((res)=>{
+            //  console.log(res);
+            var msg = res.data.msg;
+            if( msg === 'ok' ){
+                this.movieList = res.data.data.movieList;
             }
-            console.log(this.movieList);
-            console.log(res);
         });
     }
 }

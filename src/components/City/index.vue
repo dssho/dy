@@ -87,7 +87,7 @@ export default {
     }
   },
   mounted(){
-   this.axios.get('/api/cityList').then((res)=>{
+   this.axios.get('api/cityList').then((res)=>{
     //  console.log(res);
     var msg=res.data.msg;
     if(msg==='ok'){

@@ -97,18 +97,34 @@
         </div>
         <div class="btn_pre">预售</div>
       </li> -->
-      <li v-for="item in comingList" :key="item.id">
+
+      <!-- <li v-for="item in comingList" :key="item.id">
         <div class="pic_show">
-          <img :src="item.img | setWh('128.180')" alt="">
+           <img :src="item.images.medium" style="height:90px" alt="" />
         </div>
         <div class="info_list">
-          <h2>{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png" /></h2>
-          <p><span class="person">{{item.wish}}</span>人想看</p>
-          <p>主演:{{item.star}}</p>
-          <p>{{item.rt}}上映</p>
+          <h2>{{item.title}}</h2>
+          <p><span class="person">{{item.collect_count}}</span>人收藏</p>
+          <p  v-for="i in item.casts" :key="i.id">主演:{{i.name}}</p>
+          <p>{{item.genres}}</p>
+          <p>{{item.pubdates[0]}}上映</p>
         </div>
         <div class="btn_pre">预售</div>
-      </li> 
+      </li>  -->
+      <li v-for="item in comingList" :key="item.id">
+        <div class="pic_show">
+          <img :src="item.img | setWH('128.180')">
+          </div>
+        <div class="info_list">
+        <h2>{{ item.nm }} <img v-if="item.version" src="@/assets/maxs.png" alt=""></h2>
+        <p><span class="person">{{ item.wish }}</span> 人想看</p>
+        <p>主演: {{ item.star }}</p>
+        <p>{{ item.rt }}上映</p>
+        </div>
+        <div class="btn_pre">
+        预售
+        </div>
+      </li>
     </ul>
   </div>
 </template>
@@ -121,11 +137,21 @@ export default {
     }
   },
   mounted(){
+    // this.axios.get('/v2/movie/coming_soon').then((res)=>{
+    //    var status=res.status;
+    //         if(status===200){
+    //          this.comingList=res.data.subjects;
+    //         //  console.log(res.data.subjects);
+    //         //  console.log(this.movieList);
+    //         }
+            
+    //         console.log(res);
     this.axios.get('/api/movieComingList?cityId=10').then((res)=>{
-      var msg=res.data.msg;
-      if(msg==='ok'){
-        this.comingList=res.data.data.comingList;
-      }
+      var msg = res.data.msg;
+      if(msg === 'ok'){
+          this.comingList = res.data.data.comingList;
+     }
+
     });
   }
 }
