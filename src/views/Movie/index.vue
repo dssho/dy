@@ -79,6 +79,7 @@ export default {
    display:flex;
    height:100%;
    line-height:45px;
+   
  }
  .movie_menu .hot_item{
    font-size:15px;
