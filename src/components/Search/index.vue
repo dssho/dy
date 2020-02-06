@@ -76,13 +76,15 @@ export default {
   watch:{
     message(newVal){
       var that=this;
+       var cityId=this.$store.state.city.id;
+       
       // 调用
       this.cancelRequest();
       // console.log(newVal);
       // 处理防抖，防止多次触发用定时器或axios自带的方法
       // clearTimeout()
       // setTimeout()
-      this.axios.get('/api/searchList?cityId=10&kw='+newVal, {   
+      this.axios.get('/api/searchList?cityId='+cityId+'&kw='+newVal, {   
         // 处理防抖          
                 cancelToken: new this.axios.CancelToken(function(c) {
                     that.source = c;

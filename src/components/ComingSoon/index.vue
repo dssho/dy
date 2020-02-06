@@ -1,79 +1,9 @@
 <template>
   <div class="movie_body">
+    <Loading v-if="isLoading"></Loading>
+    <Scroller v-else>
     <ul>
       <!-- <li>
-        <div class="pic_show">
-          <img src="/images/movie_1.jpg" alt="">
-        </div>
-        <div class="info_list">
-          <h2>无名之辈</h2>
-          <p><span class="person">177</span>人想看</p>
-          <p>主演:陈建斌</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic_show">
-          <img src="/images/movie_1.jpg" alt="">
-        </div>
-        <div class="info_list">
-          <h2>无名之辈</h2>
-          <p><span class="person">177</span>人想看</p>
-          <p>主演:陈建斌</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic_show">
-          <img src="/images/movie_1.jpg" alt="">
-        </div>
-        <div class="info_list">
-          <h2>无名之辈</h2>
-          <p><span class="person">177</span>人想看</p>
-          <p>主演:陈建斌</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic_show">
-          <img src="/images/movie_1.jpg" alt="">
-        </div>
-        <div class="info_list">
-          <h2>无名之辈</h2>
-          <p><span class="person">177</span>人想看</p>
-          <p>主演:陈建斌</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic_show">
-          <img src="/images/movie_1.jpg" alt="">
-        </div>
-        <div class="info_list">
-          <h2>无名之辈</h2>
-          <p><span class="person">177</span>人想看</p>
-          <p>主演:陈建斌</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic_show">
-          <img src="/images/movie_1.jpg" alt="">
-        </div>
-        <div class="info_list">
-          <h2>无名之辈</h2>
-          <p><span class="person">177</span>人想看</p>
-          <p>主演:陈建斌</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
         <div class="pic_show">
           <img src="/images/movie_1.jpg" alt="">
         </div>
@@ -126,6 +56,7 @@
         </div>
       </li>
     </ul>
+    </Scroller>
   </div>
 </template>
 <script>
@@ -133,10 +64,13 @@ export default {
   name:'ComingSoon',
   data(){
     return{
-      comingList:[]
+      comingList:[],
+       // 加载失败为true
+      isLoading:true,
+      prevCityId:-1
     }
   },
-  mounted(){
+  activated(){
     // this.axios.get('/v2/movie/coming_soon').then((res)=>{
     //    var status=res.status;
     //         if(status===200){
@@ -146,10 +80,21 @@ export default {
     //         }
             
     //         console.log(res);
-    this.axios.get('/api/movieComingList?cityId=10').then((res)=>{
+     var cityId=this.$store.state.city.id;
+        // 如果她两相等说明就不用切换城市
+        if( this.prevCityId===cityId){
+            return;
+        }
+         this.isLoading=true;
+         console.log(123);
+    this.axios.get('/api/movieComingList?cityId='+cityId).then((res)=>{
       var msg = res.data.msg;
       if(msg === 'ok'){
           this.comingList = res.data.data.comingList;
+           // 数据加载成功
+           this.isLoading=false;
+           // 对 prevCityId进行赋值
+            this.prevCityId=cityId;
      }
 
     });

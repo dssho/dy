@@ -1,5 +1,9 @@
 <template>
-    <div class="movie_body">
+    <div class="movie_body" ref="movie_body">
+        <!-- 等待图片 -->
+        <Loading v-if="isLoading"></Loading>
+        <!-- 下拉 -->
+        <Scroller v-else :handleToScroll="handleToScroll" :handleToTouchEnd="handleToTouchEnd">
         <ul>
             <!-- <li>
                 <div class="pic_show">
@@ -13,90 +17,7 @@
                 </div>
                 <div class="btn_mall">购票</div>
             </li>
-            <li>
-                <div class="pic_show">
-                    <img src="/images/movie_1.jpg" alt="">
-                </div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演:陈建斌</p>
-                    <p>今天共反映500场</p>
-                </div>
-                <div class="btn_mall">购票</div>
-            </li>
-            <li>
-                <div class="pic_show">
-                    <img src="/images/movie_1.jpg" alt="">
-                </div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演:陈建斌</p>
-                    <p>今天共反映500场</p>
-                </div>
-                <div class="btn_mall">购票</div>
-            </li>
-            <li>
-                <div class="pic_show">
-                    <img src="/images/movie_1.jpg" alt="">
-                </div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演:陈建斌</p>
-                    <p>今天共反映500场</p>
-                </div>
-                <div class="btn_mall">购票</div>
-            </li>
-            <li>
-                <div class="pic_show">
-                    <img src="/images/movie_1.jpg" alt="">
-                </div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演:陈建斌</p>
-                    <p>今天共反映500场</p>
-                </div>
-                <div class="btn_mall">购票</div>
-            </li>
-            <li>
-                <div class="pic_show">
-                    <img src="/images/movie_1.jpg" alt="">
-                </div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演:陈建斌</p>
-                    <p>今天共反映500场</p>
-                </div>
-                <div class="btn_mall">购票</div>
-            </li>
-            <li>
-                <div class="pic_show">
-                    <img src="/images/movie_1.jpg" alt="">
-                </div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演:陈建斌</p>
-                    <p>今天共反映500场</p>
-                </div>
-                <div class="btn_mall">购票</div>
-            </li>
-            <li>
-                <div class="pic_show">
-                    <img src="/images/movie_1.jpg" alt="">
-                </div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演:陈建斌</p>
-                    <p>今天共反映500场</p>
-                </div>
-                <div class="btn_mall">购票</div>
-            </li> -->
+            -->
           
             <!-- <li v-for="item in movieList" :key="item.id">
                 <div class="pic_show"> -->
@@ -114,9 +35,11 @@
                 <div class="btn_mall">购票</div>
             </li> -->
 
-            
+                 <!-- 添加li 渲染下拉 -->
+                 <li class="pullDown">{{pullDownMsg}}</li>
                 <li v-for="item in movieList" :key="item.id">
-                    <div class="pic_show"><img :src="item.img | setWH('128.180')"></div>
+                    <!--  @tap="handleToDetail"跳到详情页 -->
+                    <div class="pic_show" @tap="handleToDetail"><img :src="item.img | setWH('128.180')"></div>
                     <div class="info_list">
                         <h2>{{ item.nm }} <img v-if="item.version" src="@/assets/maxs.png" alt=""></h2>
                         <p>观众评 <span class="grade">{{ item.sc }}</span></p>
@@ -128,17 +51,29 @@
                     </div>
                 </li>
         </ul>
+     </Scroller>
     </div>
 </template>
 <script>
+// 使滑动更流畅
+// 因为每个都需要所以做成一个组件
+// import BScroll from "better-scroll";
 export default {
     name:'NowPlaying',
     data(){
         return{
-            movieList:[]
+            movieList:[],
+            // 下拉
+            pullDownMsg:'',
+            // 加载失败为true
+            isLoading:true,
+            // 上一次的城市id
+            prevCityId:-1
         }
     },
-    mounted(){
+    // 用activated代替mounted
+    // activated使用它是组件间切换时里边的数据也会再次出现
+   activated(){
         // this.axios.get('/v2/movie/in_theaters').then((res)=>{
         //     var status=res.status;
         //     if(status===200){
@@ -148,25 +83,111 @@ export default {
         //     }
             
         //     // console.log(res);
-
-         this.axios.get('/api/movieOnInfoList?cityId=10').then((res)=>{
+        
+        //  console.log(123);
+        var cityId=this.$store.state.city.id;
+        // 如果她两相等说明就不用切换城市
+        if( this.prevCityId===cityId){
+            return;
+        }
+         this.isLoading=true;
+         console.log(123);
+         this.axios.get('/api/movieOnInfoList?cityId='+cityId).then((res)=>{
             //  console.log(res);
             var msg = res.data.msg;
             if( msg === 'ok' ){
                 this.movieList = res.data.data.movieList;
+                // 数据加载成功
+                this.isLoading=false;
+                // 对 prevCityId进行赋值
+                 this.prevCityId=cityId;
+
+                //  new BScroll 使用它有两点 等数据全部渲染完才可以执行，里边框要大于外边框时才可以做操作(比如点击操作，点击跳转详情页)
+                // 保证数据赋值后，界面渲染完,再去触发下边的
+                // this.$nextTick(()=>{
+                //    // 等数据完才可调用
+                // //    两个参数  1.找到包裹的容器
+                //              // 2.配置对象
+                // // 做下拉更新，先赋值一下
+                //   var scroll=new BScroll(this.$refs.movie_body,{
+                //     //   如果想要handleToDetail能点击跳转，必须先开启tap
+                //       tap:true,
+                //     //   scroll配置 查better-scroll api即有
+                //     // 滚动的时候会派发scroll事件,会节流
+                //     probeType:1
+                //   });
+                // //   添加一个scroll方法
+                // // pos检测到当前的位置
+                // scroll.on('scroll',(pos)=>{
+                //     // 要想使用，先配置
+                //     // console.log('scroll')
+                //     if(pos.y>30){
+                //       this.pullDownMsg='正在更新中';
+                //     }
+                //  });
+                //   //    添加touchend方法
+                // scroll.on('touchEnd',(pos)=>{
+                // //   console.log('touchend');
+                //  if(pos.y>30){
+                //     this.axios.get('/api/movieOnInfoList?cityId=10').then((res)=>{
+                //       var msg = res.data.msg;
+                //       if( msg === 'ok' ){
+                //           this.pullDownMsg='更新成功';
+                //           setTimeout(() => {
+                //                this.movieList = res.data.data.movieList;
+                //                this.pullDownMsg='';
+                //           }, 1000);
+                       
+                //        }
+                //     });
+                //   }
+                //  });
+                // });
+           
             }
         });
+    },
+    methods:{
+        handleToDetail(){
+            console.log("handleToDetail");
+        },
+        handleToScroll(pos){
+            if(pos.y>30){
+              this.pullDownMsg='正在更新中';
+             }
+           
+        },
+        handleToTouchEnd(pos){
+            if(pos.y>30){
+                this.axios.get('/api/movieOnInfoList?cityId=10').then((res)=>{
+                    var msg = res.data.msg;
+                    if( msg === 'ok' ){
+                        this.pullDownMsg='更新成功';
+                        setTimeout(() => {
+                            this.movieList = res.data.data.movieList;
+                            this.pullDownMsg='';
+                        }, 1000);
+                    
+                    }
+                });
+            }
+        }
     }
 }
 </script>
 <style scoped>
  .movie_body{
-     flex:1;
-     overflow:auto;
+     margin-top:96px;
+   display:flex;
+   width:100%;
+   position:absolute;
+   top:0;
+   bottom:0;
  }
  .movie_body ul{
-     margin:0 12px;
-     overflow:hidden;
+     flex:1;
+     /* margin:0 12px; */
+     overflow:auto;
  }
 .movie_body ul li{
      margin:12px;
@@ -228,5 +249,10 @@ export default {
     border-radius:4px;
     font-size:12px;
     cursor:pointer;
+}
+.movie_body .pullDown{
+    margin:0;
+    padding:0;
+    border:0;
 }
 </style>

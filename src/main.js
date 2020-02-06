@@ -10,6 +10,13 @@ Vue.prototype.axios=axios;
 Vue.filter('setWH',(url,arg)=>{
   return url.replace(/w\.h/,arg);
 });
+// 下拉延迟
+import Scroller from '@/components/Scroller'
+Vue.component('Scroller',Scroller);
+// 等待出现图片,而不是空白屏
+import Loading from '@/components/Loading'
+Vue.component('Loading',Loading);
+
 
 Vue.config.productionTip = false
 
