@@ -20,41 +20,23 @@
             </li>
             -->
             <li class="pullDown">{{pullDownMsg}}</li>
-            <li v-for="item in movieList" :key="item.id">
-                <div class="pic_show" @tap="handleToDetail(item.id)"> 
+            <li v-for="(item,index) in movieList" :key="index">
+                <div class="pic_show" @tap="handleToDetail(item.subject.id)"> 
          <!-- "img":"http://p1.meituan.net/w.h/movie/967b253953bc7e660cfadbf9d78f67b62852693.jpg" -->
          <!-- 地址中有w.h 即宽乘高  用过滤器 在main.js中设置过滤器 -->
                     <!-- <img :src="item.images | setWH('128.180')" alt=""> -->
-                    <img :src="item.images.medium | setWH('128.180')"  alt="" />
+                    <img :src="item.subject.images.medium | setWH('128.180')"  alt="" />
                 </div>
                 <div class="info_list">
-                    <h2 @tap="handleToDetail(item.id)">{{item.title}}</h2>
-                    <p>观众评 <span class="grade">{{item.rating.average}}</span></p>
-                   <p> 主演:
-                          <span v-for="i in item.casts" :key="i.id">{{i.name}}  </span>
-                   </p>
-                    <p> 类型:
-                          <span v-for="i in item.genres" :key="i.id">{{i}}  </span>
-                   </p>
+                    <h2 @tap="handleToDetail(item.id)">{{item.subject.title}}</h2>
+                    <p>时长 <span class="grade" >{{item.subject.durations[0]}}</span></p>
+                    <p>主演:
+                        <span v-for="i in item.subject.casts" :key="i.id">{{i.name }}  </span>
+                    </p>
+                    <p>{{item.subject.pubdates[0]}}</p>
                 </div>
                 <div class="btn_mall">购票</div>
             </li>
-
-                 <!-- 添加li 渲染下拉 -->
-                 <!-- <li class="pullDown">{{pullDownMsg}}</li>
-                <li v-for="item in movieList" :key="item.id"> -->
-                    <!--  @tap="handleToDetail"跳到详情页 -->
-                    <!-- <div class="pic_show" @tap="handleToDetail(item.id)"><img :src="item.img | setWH('128.180')"></div>
-                    <div class="info_list">
-                        <h2 @tap="handleToDetail(item.id)">{{ item.nm }} <img v-if="item.version" src="@/assets/maxs.png" alt=""></h2>
-                        <p>观众评 <span class="grade">{{ item.sc }}</span></p>
-                        <p>主演: {{ item.star }}</p>
-                        <p>{{ item.showInfo }}</p>
-                    </div>
-                    <div class="btn_mall">
-                        购票
-                    </div>
-                </li> -->
         </ul>
      </Scroller>
     </div>
@@ -64,7 +46,7 @@
 // 因为每个都需要所以做成一个组件
 // import BScroll from "better-scroll";
 export default {
-    name:'NowPlaying',
+    name:'America',
     data(){
         return{
             movieList:[],
@@ -80,7 +62,7 @@ export default {
     // activated使用它是组件间切换时里边的数据也会再次出现
    activated(){
        this.isLoading=true;
-        this.axios.get('/v2/movie/in_theaters').then((res)=>{
+        this.axios.get('/v2/movie/us_box?apikey=0df993c66c0c636e29ecbb5344252a4a').then((res)=>{
             var status=res.status;
             if(status===200){
              this.movieList=res.data.subjects;
@@ -108,7 +90,7 @@ export default {
         },
         handleToTouchEnd(pos){
             if(pos.y>30){
-                this.axios.get('/v2/movie/in_theaters').then((res)=>{
+                this.axios.get('/v2/movie/us_box?apikey=0df993c66c0c636e29ecbb5344252a4a').then((res)=>{
                     var status=res.status;
                     if(status===200){
                         this.pullDownMsg='更新成功';

@@ -15,38 +15,31 @@
         </div>
         <div class="btn_pre">预售</div>
       </li>
-      <li>
-        <div class="pic_show">
-          <img src="/images/movie_1.jpg" alt="">
-        </div>
-        <div class="info_list">
-          <h2>无名之辈</h2>
-          <p><span class="person">177</span>人想看</p>
-          <p>主演:陈建斌</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li> -->
+      -->
 
-      <!-- <li v-for="item in comingList" :key="item.id">
-        <div class="pic_show">
-           <img :src="item.images.medium" style="height:90px" alt="" />
+      <li v-for="item in comingList" :key="item.id">
+        <div class="pic_show" @tap="handleToDetail(item.id)">
+           <img :src="item.images.medium  | setWH('128.180')" alt="" />
         </div>
         <div class="info_list">
-          <h2>{{item.title}}</h2>
+          <h2 @tap="handleToDetail(item.id)">{{item.title}}</h2>
           <p><span class="person">{{item.collect_count}}</span>人收藏</p>
-          <p  v-for="i in item.casts" :key="i.id">主演:{{i.name}}</p>
-          <p>{{item.genres}}</p>
+           <p> 主演: 
+             <span v-for="i in item.casts" :key="i.id">{{i.name}} </span>
+           </p>
+          <p> 类型:
+            <span v-for="i in item.genres" :key="i.id">{{i}}  </span>
+          </p>
           <p>{{item.pubdates[0]}}上映</p>
         </div>
         <div class="btn_pre">预售</div>
-      </li>  -->
-      <li v-for="item in comingList" :key="item.id">
-        <div class="pic_show">
+      </li> 
+      <!-- <li v-for="item in comingList" :key="item.id">
+        <div class="pic_show" @tap="handleToDetail(item.id)">
           <img :src="item.img | setWH('128.180')">
           </div>
         <div class="info_list">
-        <h2>{{ item.nm }} <img v-if="item.version" src="@/assets/maxs.png" alt=""></h2>
+        <h2 @tap="handleToDetail(item.id)">{{ item.nm }} <img v-if="item.version" src="@/assets/maxs.png" alt=""></h2>
         <p><span class="person">{{ item.wish }}</span> 人想看</p>
         <p>主演: {{ item.star }}</p>
         <p>{{ item.rt }}上映</p>
@@ -54,7 +47,7 @@
         <div class="btn_pre">
         预售
         </div>
-      </li>
+      </li> -->
     </ul>
     </Scroller>
   </div>
@@ -67,37 +60,47 @@ export default {
       comingList:[],
        // 加载失败为true
       isLoading:true,
-      prevCityId:-1
+      // prevCityId:-1
     }
   },
   activated(){
-    // this.axios.get('/v2/movie/coming_soon').then((res)=>{
-    //    var status=res.status;
-    //         if(status===200){
-    //          this.comingList=res.data.subjects;
-    //         //  console.log(res.data.subjects);
-    //         //  console.log(this.movieList);
-    //         }
+     this.isLoading=true;
+    this.axios.get('/v2/movie/coming_soon').then((res)=>{
+       var status=res.status;
+            if(status===200){
+             this.comingList=res.data.subjects;
+            //  console.log(res.data.subjects);
+            //  console.log(this.movieList);
+            // 数据加载成功
+           this.isLoading=false;
+            }
             
     //         console.log(res);
-     var cityId=this.$store.state.city.id;
-        // 如果她两相等说明就不用切换城市
-        if( this.prevCityId===cityId){
-            return;
-        }
-         this.isLoading=true;
-         console.log(123);
-    this.axios.get('/api/movieComingList?cityId='+cityId).then((res)=>{
-      var msg = res.data.msg;
-      if(msg === 'ok'){
-          this.comingList = res.data.data.comingList;
-           // 数据加载成功
-           this.isLoading=false;
-           // 对 prevCityId进行赋值
-            this.prevCityId=cityId;
-     }
+    //  var cityId=this.$store.state.city.id;
+    //     // 如果她两相等说明就不用切换城市
+    //     if( this.prevCityId===cityId){
+    //         return;
+    //     }
+    //      this.isLoading=true;
+    //      console.log(123);
+    // this.axios.get('/api/movieComingList?cityId='+cityId).then((res)=>{
+    //   var msg = res.data.msg;
+    //   if(msg === 'ok'){
+    //       this.comingList = res.data.data.comingList;
+    //        // 数据加载成功
+    //        this.isLoading=false;
+    //        // 对 prevCityId进行赋值
+    //         this.prevCityId=cityId;
+    //  }
 
     });
+  },
+  methods:{
+    handleToDetail(movieId){
+        // console.log(movieId);
+        // 跳转
+        this.$router.push('/movie/detail/2/'+movieId);
+    }
   }
 }
 </script>
