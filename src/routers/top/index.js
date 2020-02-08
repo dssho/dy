@@ -11,8 +11,8 @@ export default {
             component:()=>import('@/components/America')
         },
         {
-            path:'fresh',
-            component:()=>import('@/components/Fresh')
+            path:'freach',
+            component:()=>import('@/components/Freach')
         },
         {   
             // 百度搜索vue router中命名视图的格式

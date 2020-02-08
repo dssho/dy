@@ -9,7 +9,7 @@
           <div class="hot_swtich">
             <router-link class="hot_item"  tag="div" to="/top/america">北美榜</router-link>
           </div>
-          <router-link class="search_entry" tag="div" to="/top/fresh">
+          <router-link class="search_entry" tag="div" to="/top/freach">
              <span>新片榜</span>
           </router-link>
         </div>
