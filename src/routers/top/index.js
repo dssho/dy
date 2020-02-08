@@ -1,29 +1,25 @@
 export default {
-    path:'/movie',
-    component:()=>import('@/views/Movie'),
+    path:'/top',
+    component:()=>import('@/views/Top'),
     children:[
         {
-          path:'discuss',
-          component:()=>import('@/components/Discuss')
+          path:'week',
+          component:()=>import('@/components/Week')
         },
         {
-            path:'nowPlaying',
-            component:()=>import('@/components/NowPlaying')
+            path:'america',
+            component:()=>import('@/components/America')
         },
         {
-            path:'comingSoon',
-            component:()=>import('@/components/ComingSoon')
-        },
-        {
-            path:'works',
-            component:()=>import('@/components/Works')
+            path:'fresh',
+            component:()=>import('@/components/Fresh')
         },
         {   
             // 百度搜索vue router中命名视图的格式
             path:'detail/1/:movieId',
             components:{
                 // 指向没有名字的组件，所以和detail中的第二个router-view就区分开了
-                default:()=>import('@/components/NowPlaying'),
+                default:()=>import('@/components/Week'),
                 detail:()=>import('@/views/Movie/detail')
             },
             // 多个显示区域,所以用对象
@@ -36,7 +32,7 @@ export default {
             path:'detail/2/:movieId',
             components:{
                 // 指向没有名字的组件，所以和detail中的第二个router-view就区分开了
-                default:()=>import('@/components/ComingSoon'),
+                default:()=>import('@/components/America'),
                 detail:()=>import('@/views/Movie/detail')
             },
             // 多个显示区域,所以用对象
@@ -45,8 +41,8 @@ export default {
             }
         },
         {
-            path:'/movie',
-            redirect:'/movie/nowPlaying'
+            path:'/top',
+            redirect:'/top/week'
         }
     ]
 }

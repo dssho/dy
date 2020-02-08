@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import movieRouter from './movie'
-import cinemaRouter from './cinema'
+import cinemaRouter from './top'
 import mineRouter from './mine'
 
 Vue.use(VueRouter)

@@ -3,16 +3,15 @@
       <Header title="电影"></Header>
       <div id="content">
         <div class="movie_menu">
-          <router-link class="city_name" tag="div" to="/movie/city">
-            <span>{{$store.state.city.nm}}</span>
-            <i class="iconfont icon-lower-triangle"></i>
+          <router-link class="city_name" tag="div" to="/movie/discuss">
+            <span>影评</span>
           </router-link>
           <div class="hot_swtich">
             <router-link class="hot_item"  tag="div" to="/movie/nowPlaying">正在热映</router-link>
             <router-link class="hot_item" tag="div" to="/movie/comingSoon">即将上映</router-link>
           </div>
-          <router-link class="search_entry" tag="div" to="/movie/search">
-            <i class="iconfont icon-sousuo"></i>
+          <router-link class="search_entry" tag="div" to="/movie/works">
+             <span>影人</span>
           </router-link>
         </div>
       <keep-alive>
@@ -20,13 +19,15 @@
       </keep-alive>
       </div>
       <TabBar></TabBar>
-     
+     <!-- 详情页 -->
+     <!-- name="detail"与movie/index.js中detail:()=>import('@/views/movie/detail')相对应 -->
+     <router-view name="detail"></router-view>
   </div>
 </template>
 <script>
 import Header from '@/components/Header';
 import TabBar from '@/components/TabBar';
-import {messageBox} from '@/components/JS';
+// import {messageBox} from '@/components/JS';
 export default {
   name:'Movie',
   components:{
@@ -35,35 +36,35 @@ export default {
    
   },
   mounted(){
-    setTimeout(()=>{
-      this.axios.get('/api/getLocation').then((res)=>{
-        var msg=res.data.msg;
-        if(msg==='ok'){
-          var nm=res.data.data.nm;
-          var id=res.data.data.id;
-          // 当位置和当前定位位置一样时不需要切换定位
-          if(this.$store.state.city.id==id){
-            return;
-          }
-          messageBox({
-            title:'定位2',
-            content:nm,
-            cancel:'取消',
-            ok:'切换定位',
-            // 点击取消就直接到页面，所以不用也行
-            // handleCancel:function(){
-            //   console.log(1);
-            // },
-            handleOk:function(){
-              // console.log(2);
-              window.localStorage.setItem('nowNm',nm);
-              window.localStorage.setItem('nowId',id);
-              window.location.reload();
-            }
-          })
-        }
-      });
-    },3000)
+    // setTimeout(()=>{
+    //   this.axios.get('/api/getLocation').then((res)=>{
+    //     var msg=res.data.msg;
+    //     if(msg==='ok'){
+    //       var nm=res.data.data.nm;
+    //       var id=res.data.data.id;
+    //       // 当位置和当前定位位置一样时不需要切换定位
+    //       if(this.$store.state.city.id==id){
+    //         return;
+    //       }
+    //       messageBox({
+    //         title:'定位2',
+    //         content:nm,
+    //         cancel:'取消',
+    //         ok:'切换定位',
+    //         // 点击取消就直接到页面，所以不用也行
+    //         // handleCancel:function(){
+    //         //   console.log(1);
+    //         // },
+    //         handleOk:function(){
+    //           // console.log(2);
+    //           window.localStorage.setItem('nowNm',nm);
+    //           window.localStorage.setItem('nowId',id);
+    //           window.location.reload();
+    //         }
+    //       })
+    //     }
+    //   });
+    // },3000)
   }
 }
 </script>
