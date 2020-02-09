@@ -120,7 +120,7 @@ export default {
 </script>
 
 <style scoped>
-#detailContrainer{ position: fixed; left:0; top:0; z-index: 100; width:100%; min-height:100%; background:white;}
+#detailContrainer{ position: absolute; left:0; top:0; z-index: 100; width:100%; min-height:100%; background:white;}
 #detailContrainer.slide-enter-active{ animation:.3s slideMove;}
 @keyframes slideMove{
     0%{ transform : translateX(100%); }

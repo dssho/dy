@@ -47,6 +47,7 @@ export default {
    border-bottom:1px solid #e6e6e6;
    align-items: center;
    background:#fff;
+   position: relative;
    z-index:10;
  }
  .movie_menu .city_name{

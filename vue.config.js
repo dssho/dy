@@ -11,6 +11,12 @@ module.exports={
     //     target : 'http://39.97.33.178',
     //     changeOrigin : true
     // }
-    }
+    },
+    public:'192.168.0.107:8080',
+    hot:true,
+    disableHostCheck:true,
+   
+     
+    
   }
 }
