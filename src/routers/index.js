@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import movieRouter from './movie'
 import cinemaRouter from './top'
 import mineRouter from './mine'
+import adminRouter from './admin'
 
 Vue.use(VueRouter)
 
@@ -10,6 +11,7 @@ const routes = [
    movieRouter,
     cinemaRouter,
     mineRouter,
+    adminRouter,
   {
 	path:'/*',
 	redirect:'/movie'
@@ -19,7 +21,7 @@ const routes = [
 const router = new VueRouter({
   routes,
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: 'dy',
 })
 
 export default router

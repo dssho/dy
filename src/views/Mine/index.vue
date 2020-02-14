@@ -2,7 +2,7 @@
   <div id="mine">
       <Header title="我的"></Header>
       <div id="content">
-       <Login></Login>
+        <router-view></router-view>
       </div>
       <TabBar></TabBar>
   </div>
